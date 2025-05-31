@@ -4,11 +4,12 @@ namespace Application.DTOs.DataDTOs.Authentication
 {
     public class UserDto
     {
-        [Required]
+        [Required(ErrorMessage = "Client code is required")]
+        [RegularExpression(@"^\d{3,10}$")]
         public string ClientCode { get; set; } = default!;
-        [Required]
+        [Required(ErrorMessage = "Username is required")]
         public string UserName { get; set; } = default!;
-        [Required]
+        [Required(ErrorMessage = "Password is required")]
         public string Password { get; set; } = default!;
     }
 }

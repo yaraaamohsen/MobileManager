@@ -1,6 +1,7 @@
 ﻿using Application.DTOs;
 using Application.DTOs.DataDTOs.Authentication;
 using Application.Interfaces;
+using Domain.Exceptions;
 
 namespace Application.Services
 {
@@ -8,9 +9,9 @@ namespace Application.Services
     {
         public BaseResponse<TokenDataDto> Login(UserDto user)
         {
-            if (user.ClientCode != "Client01" || user.UserName != "User01" || user.Password != "P@ssW0rd01")
+            if (user.ClientCode != "0123" || user.UserName != "User01" || user.Password != "P@ssW0rd01")
             {
-                return new BaseResponse<TokenDataDto>("InvalidCredentials");
+                throw new UnauthorizedException();
             }
 
             var token = _tokenService.GenerateToken(user.UserName);

@@ -1,7 +1,10 @@
 
+using Application.DTOs;
 using Application.Interfaces;
 using Application.Services;
+using Microsoft.AspNetCore.Mvc;
 using Presentation;
+using Presentation.CustomMiddleware;
 
 namespace MobileManager
 {
@@ -22,7 +25,21 @@ namespace MobileManager
             builder.Services.AddScoped<IAuthService, AuthService>();
             builder.Services.AddScoped<ITokenService, TokenService>();
 
+            builder.Services.Configure<ApiBehaviorOptions>((options) =>
+            {
+                options.InvalidModelStateResponseFactory = context =>
+                {
+                    var errorMessage = "Error Message Description";
+
+                    var response = new BaseResponse<object>(errorMessage);
+
+                    return new BadRequestObjectResult(response);
+                };
+            });
+
             var app = builder.Build();
+
+            app.UseMiddleware<CustomExceptionMiddlewareHandler>();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())

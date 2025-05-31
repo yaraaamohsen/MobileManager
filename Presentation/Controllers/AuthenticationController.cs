@@ -17,7 +17,7 @@ namespace Presentation.Controllers
 
         /*
             {
-              "clientCode": "Client01",
+              "clientCode": "0123",
               "username": "User01",
               "password": "P@ssW0rd01"
             }

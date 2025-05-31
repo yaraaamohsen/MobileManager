@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 namespace Application.DTOs
 {
     public class BaseResponse<T>
@@ -9,6 +10,7 @@ namespace Application.DTOs
         [Required]
         public string Message { get; set; }
 
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public T? Data { get; set; }
 
         // Response Success
@@ -24,7 +26,6 @@ namespace Application.DTOs
         {
             IsSuccess = false;
             Message = message;
-            Data = default;
         }
     }
 }
