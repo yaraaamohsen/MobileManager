@@ -1,4 +1,8 @@
 
+using Application.Interfaces;
+using Application.Services;
+using Presentation;
+
 namespace MobileManager
 {
     public class Program
@@ -10,9 +14,13 @@ namespace MobileManager
             // Add services to the container.
 
             builder.Services.AddControllers();
+            builder.Services.AddControllers().AddApplicationPart(typeof(AssemblyReference).Assembly);
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+
+            builder.Services.AddScoped<IAuthService, AuthService>();
+            builder.Services.AddScoped<ITokenService, TokenService>();
 
             var app = builder.Build();
 
