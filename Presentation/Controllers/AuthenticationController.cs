@@ -5,10 +5,10 @@ using Microsoft.AspNetCore.Mvc;
 namespace Presentation.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("NT/[controller]")]
     public class AuthenticationController(IAuthService _authService) : ControllerBase
     {
-        [HttpPost("login")]
+        [HttpPost("GenerateToken")]
         public IActionResult Login([FromBody] UserDto userDto)
         {
             var result = _authService.Login(userDto);
