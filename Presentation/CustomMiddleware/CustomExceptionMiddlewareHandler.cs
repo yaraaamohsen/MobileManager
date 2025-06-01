@@ -22,12 +22,22 @@ namespace Presentation.CustomMiddleware
             {
                 await _next.Invoke(_context);
 
+                // Handdling Unauthorized Exception
                 if (_context.Response.StatusCode == StatusCodes.Status401Unauthorized && !_context.Response.HasStarted)
                 {
                     _context.Response.ContentType = "application/json";
-                    var response = new BaseResponse<object>("Unauthorized access");
+                    var response = new BaseResponse<object>("Unauthorized Access");
                     await _context.Response.WriteAsJsonAsync(response);
                 }
+
+                // Handling NotFound EndPoint Exception
+                if (_context.Response.StatusCode == StatusCodes.Status404NotFound)
+                {
+                    _context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+                    var response = new BaseResponse<object>("Please re-try again, if the error persist please contact Administrator");
+                    await _context.Response.WriteAsJsonAsync(response);
+                }
+
             }
             catch (Exception ex)
             {
@@ -49,7 +59,8 @@ namespace Presentation.CustomMiddleware
 
             var responseMessage = ex switch
             {
-                ValidationException or UnauthorizedException => ex.Message,
+                ValidationException => ex.Message,
+                UnauthorizedException => ex.Message,
                 _ => "Please re-try again, if the error persist please contact Administrator"
             };
             var Response = new BaseResponse<object>(responseMessage);

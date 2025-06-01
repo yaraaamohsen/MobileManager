@@ -1,4 +1,5 @@
-﻿using Application.DTOs.DataDTOs.Data;
+﻿using Application.DTOs;
+using Application.DTOs.DataDTOs.Data;
 using Application.DTOs.DataDTOs.Version;
 using Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -12,7 +13,7 @@ namespace Presentation.Controllers
     public class DataController(IDataService _dataService) : ControllerBase
     {
         [HttpGet("GetClientDataVersion")]
-        public ActionResult<ClientDataDto> GetClientDataVersion()
+        public ActionResult<BaseResponse<List<ClientDataDto>>> GetClientDataVersion()
         {
             var result = _dataService.getClienDataVersion();
             return Ok(result);
@@ -20,7 +21,7 @@ namespace Presentation.Controllers
 
 
         [HttpGet("getNewsData")]
-        public ActionResult<GetNewsDataDTO> getNewsData()
+        public ActionResult<BaseResponse<List<GetNewsDataDTO>>> getNewsData()
         {
             var result = _dataService.getNewsData();
             return Ok(result);
@@ -28,7 +29,7 @@ namespace Presentation.Controllers
 
 
         [HttpGet("getHealthTips")]
-        public ActionResult<GetHealthTipsDTO> getHealthTips()
+        public ActionResult<BaseResponse<List<GetHealthTipsDTO>>> getHealthTips()
         {
             var result = _dataService.getHealthTips();
             return Ok(result);
@@ -36,7 +37,7 @@ namespace Presentation.Controllers
 
 
         [HttpGet("getPromotion")]
-        public ActionResult<GetPromotionDTO> getPromotion()
+        public ActionResult<BaseResponse<List<GetPromotionDTO>>> getPromotion()
         {
             var result = _dataService.getPromotion();
             return Ok(result);
