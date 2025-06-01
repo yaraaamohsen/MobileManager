@@ -21,6 +21,13 @@ namespace Presentation.CustomMiddleware
             try
             {
                 await _next.Invoke(_context);
+
+                if (_context.Response.StatusCode == StatusCodes.Status401Unauthorized && !_context.Response.HasStarted)
+                {
+                    _context.Response.ContentType = "application/json";
+                    var response = new BaseResponse<object>("Unauthorized access");
+                    await _context.Response.WriteAsJsonAsync(response);
+                }
             }
             catch (Exception ex)
             {

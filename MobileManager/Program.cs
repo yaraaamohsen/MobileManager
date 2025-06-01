@@ -1,8 +1,10 @@
 
+using System.Text;
 using Application.DTOs;
 using Application.Interfaces;
 using Application.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using Presentation;
 using Presentation.CustomMiddleware;
 
@@ -23,16 +25,31 @@ namespace MobileManager
             builder.Services.AddSwaggerGen();
 
             builder.Services.AddScoped<IAuthService, AuthService>();
-            builder.Services.AddScoped<ITokenService, TokenService>();
+            builder.Services.AddSingleton<ITokenService, TokenService>();
+            builder.Services.AddScoped<IDataService, DataService>();
+
+            builder.Services.AddAuthentication("Bearer")
+            .AddJwtBearer("Bearer", options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = builder.Configuration["jwtOptions:Issuer"],
+                    ValidAudience = builder.Configuration["jwtOptions:Audience"],
+                    IssuerSigningKey = new SymmetricSecurityKey(
+                        Encoding.UTF8.GetBytes(builder.Configuration["jwtOptions:SecretKey"]))
+                };
+            });
 
             builder.Services.Configure<ApiBehaviorOptions>((options) =>
             {
                 options.InvalidModelStateResponseFactory = context =>
                 {
                     var errorMessage = "Error Message Description";
-
                     var response = new BaseResponse<object>(errorMessage);
-
                     return new BadRequestObjectResult(response);
                 };
             });
