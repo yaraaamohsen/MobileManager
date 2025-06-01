@@ -2,6 +2,7 @@
 using Application.DTOs.DataDTOs.Data;
 using Application.DTOs.DataDTOs.Version;
 using Application.Interfaces;
+using Domain.Exceptions;
 
 namespace Application.Services
 {
@@ -18,6 +19,10 @@ namespace Application.Services
                     ModifiedAt = DateTime.Parse("2024-08-24T14:15:22Z")
                 }
             };
+
+            if (!data.Any())
+                throw new NoContentException();
+
             return new BaseResponse<List<ClientDataDto>>(data);
         }
 
@@ -27,6 +32,10 @@ namespace Application.Services
             {
                 new GetNewsDataDTO()
             };
+
+            if (!data.Any())
+                throw new NoContentException();
+
             return new BaseResponse<List<GetNewsDataDTO>>(data);
         }
 
@@ -36,11 +45,14 @@ namespace Application.Services
             {
                 new GetHealthTipsDTO()
                 {
-                    ContentAttachment = "http://example.com",
+                    ContentAttachment = new Uri("http://example.com"),
                     ArabicContentText = "Arabic Content Text",
                     EnglishContentText = "English Content Text"
                 }
             };
+
+            if (!data.Any())
+                throw new NoContentException();
 
             return new BaseResponse<List<GetHealthTipsDTO>>(data);
         }
@@ -54,11 +66,15 @@ namespace Application.Services
                     promotionStartDate = DateTime.Parse("2025-01-01"),
                     promotionEndDate = DateTime.Parse("2025-05-10"),
                     addPromotiontoHome = true,
-                    ContentAttachment = "http://example.com",
+                    ContentAttachment = new Uri("http://example.com"),
                     ArabicContentText = "Arabic Content Text",
                     EnglishContentText = "English Content Text",
                 }
             };
+
+            if (!data.Any())
+                throw new NoContentException();
+
             return new BaseResponse<List<GetPromotionDTO>>(data);
         }
     }
