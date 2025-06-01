@@ -24,7 +24,8 @@ namespace Application.Services
                 audience: _configuration["jwtOptions:Audience"],
                 claims: Claims,
                 expires: DateTime.Now.AddDays(1),
-                signingCredentials: creds);
+                signingCredentials: creds
+             );
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
