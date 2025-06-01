@@ -1,8 +1,8 @@
-
 using System.Text;
 using Application.DTOs;
 using Application.Interfaces;
 using Application.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using Presentation;
@@ -28,19 +28,25 @@ namespace MobileManager
             builder.Services.AddSingleton<ITokenService, TokenService>();
             builder.Services.AddScoped<IDataService, DataService>();
 
-            builder.Services.AddAuthentication("Bearer")
-            .AddJwtBearer("Bearer", options =>
+            // Configure JWT Authentication
+            builder.Services.AddAuthentication(Config =>
             {
-                options.TokenValidationParameters = new TokenValidationParameters
+                Config.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                Config.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+
+            }).AddJwtBearer(Options =>
+            {
+                Options.TokenValidationParameters = new TokenValidationParameters()
                 {
                     ValidateIssuer = true,
-                    ValidateAudience = true,
-                    ValidateLifetime = true,
-                    ValidateIssuerSigningKey = true,
                     ValidIssuer = builder.Configuration["jwtOptions:Issuer"],
+
+                    ValidateAudience = true,
                     ValidAudience = builder.Configuration["jwtOptions:Audience"],
-                    IssuerSigningKey = new SymmetricSecurityKey(
-                        Encoding.UTF8.GetBytes(builder.Configuration["jwtOptions:SecretKey"]))
+
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["jwtOptions:SecretKey"]))
+
                 };
             });
 
@@ -67,6 +73,7 @@ namespace MobileManager
 
             app.UseHttpsRedirection();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
 

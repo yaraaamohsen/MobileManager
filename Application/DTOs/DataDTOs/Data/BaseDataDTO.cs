@@ -11,6 +11,6 @@ namespace Application.DTOs.DataDTOs.Data
         public string EnglishTitle { get; set; } = "English Title Details";
 
         [Url(ErrorMessage = "Not Valid Url")]
-        public string? ContentUrl { get; set; } = "http://example.com";
+        public Uri? ContentUrl { get; set; } = new Uri("http://example.com");
     }
 }

@@ -26,7 +26,7 @@ namespace Presentation.CustomMiddleware
                 if (_context.Response.StatusCode == StatusCodes.Status401Unauthorized && !_context.Response.HasStarted)
                 {
                     _context.Response.ContentType = "application/json";
-                    var response = new BaseResponse<object>("Unauthorized Access");
+                    var response = new BaseResponse<object>("Not Authorized");
                     await _context.Response.WriteAsJsonAsync(response);
                 }
 
@@ -61,6 +61,7 @@ namespace Presentation.CustomMiddleware
             {
                 ValidationException => ex.Message,
                 UnauthorizedException => ex.Message,
+                NoContentException => ex.Message,
                 _ => "Please re-try again, if the error persist please contact Administrator"
             };
             var Response = new BaseResponse<object>(responseMessage);

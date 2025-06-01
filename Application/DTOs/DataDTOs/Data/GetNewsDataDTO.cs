@@ -5,6 +5,6 @@ namespace Application.DTOs.DataDTOs.Data
     public class GetNewsDataDTO : BaseDataDTO
     {
         [Required]
-        public new string ContentUrl { get; set; } = "http://example.com";
+        public new Uri ContentUrl { get; set; } = new Uri("http://example.com");
     }
 }
